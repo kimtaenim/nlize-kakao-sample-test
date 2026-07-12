@@ -1,0 +1,42 @@
+name: collect
+
+on:
+  schedule:
+    - cron: '19 * * * *'   # 매시 19분(UTC) + 스크립트 내 0~4분 랜덤 지연
+  workflow_dispatch:        # Actions 탭에서 수동 실행 가능
+
+concurrency:
+  group: collect
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Collect rankings
+        run: node collect.mjs
+        env:
+          RUN_NOW: ${{ github.event_name == 'workflow_dispatch' && '1' || '' }}
+
+      - name: Commit & push
+        run: |
+          git config user.name "rank-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs/data
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "collect $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M KST')"
+            git pull --rebase origin main
+            git push
+          fi
