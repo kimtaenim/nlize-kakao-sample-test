@@ -24,7 +24,21 @@ docs/index.html              # 대시보드 (정적, Chart.js CDN)
 docs/data/<카테고리>/<날짜>.jsonl   # 스냅샷 DB (한 줄 = 1회 수집)
 docs/data/watch/<날짜>.jsonl        # 관심 브랜드 스냅샷
 docs/data/latest.json        # 대시보드용 사전 계산 (표·차트·관심브랜드)
+docs/crossword/              # 곁다리: 무한 크로스워드 (정적, 의존성 없음)
 ```
+
+## 무한 크로스워드 (덤)
+
+`https://kimtaenim.github.io/nlize-kakao-sample-test/crossword/`
+
+아래로 끝없이 이어지는 한글 가로세로 낱말 퍼즐. 스크롤로 내려가며 풀고, 화면 안의 칸은
+순서 없이 아무 때나 풀 수 있다. **맨 윗부분이 빈틈없이 다 풀리면 그 줄들이 걷히고 남은
+판이 위로 올라붙는다** — 그만큼 아래가 새로 생성되므로 끝이 없다.
+
+- 단어·힌트: `docs/crossword/words.js` (238개, 배열에 `["단어","힌트"]` 추가만 하면 됨)
+- 격자 생성·조합기·화면: `docs/crossword/game.js` (8열, 교차 배치 + 밀도 채우기)
+- 입력: 화면 자판(두벌식) 또는 PC 물리 키보드 — 한/영을 **영문**에 두고 그대로 타이핑
+- 진행 상황은 브라우저 `localStorage` 에 저장돼 새로고침해도 이어짐
 
 ## 설정 변경
 
